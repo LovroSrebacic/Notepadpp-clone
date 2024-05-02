@@ -13,6 +13,7 @@ public class DefaultSingleDocumentModel implements SingleDocumentModel{
 	private Path path;
 	private boolean modified;
 	private List<SingleDocumentListener> listeners;
+	private boolean firstSave;
 	
 	public DefaultSingleDocumentModel(String text, Path path) {
 		this.textArea = new JTextArea();
@@ -20,6 +21,7 @@ public class DefaultSingleDocumentModel implements SingleDocumentModel{
 		this.path = path;
 		this.modified = false;
 		this.listeners = new ArrayList<>();
+		this.firstSave = true;
 	}
 	@Override
 	public JTextArea getTextComponent() {
@@ -58,6 +60,16 @@ public class DefaultSingleDocumentModel implements SingleDocumentModel{
 	
 	public List<SingleDocumentListener> getListeners() {
 		return this.listeners;
+	}
+	
+	@Override
+	public void setFirstSave(boolean firstSave) {
+		this.firstSave = firstSave;
+	}
+	
+	@Override
+	public boolean getFirstSave() {
+		return firstSave;
 	}
 
 }
