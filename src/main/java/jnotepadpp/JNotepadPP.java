@@ -2,6 +2,7 @@ package main.java.jnotepadpp;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -10,6 +11,8 @@ import java.awt.event.WindowListener;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.Collator;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -17,6 +20,7 @@ import java.util.Locale;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -26,10 +30,14 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 
 import main.java.actions.AscendingSortAction;
@@ -61,6 +69,13 @@ public class JNotepadPP extends JFrame {
 	private JTextArea editor;
 	private JPanel textEditor;
 	private String copiedText;
+	private JPanel statusBar;
+	private JLabel labelLeft;
+	private JPanel labelRight;
+	private JLabel info;
+	private JLabel timer;
+	private String time;
+	private SimpleDateFormat dateAndTime;
 
 	private Action newDocumentAction;
 	private Action openDocumentAction;
@@ -109,6 +124,7 @@ public class JNotepadPP extends JFrame {
 		createActions();
 		createMenu();
 		createToolbar();
+		createStatusBar();
 		addListeners();
 	}
 
@@ -330,6 +346,42 @@ public class JNotepadPP extends JFrame {
 				Caret c = (Caret) e.getSource();
 				int selectionLength = Math.abs(c.getDot() - c.getMark());
 				enableCaretActions(selectionLength != 0);
+				
+				int line = 1;
+				int column = 1;
+
+				try {
+					int caretPosition = editor.getCaretPosition();
+					line = editor.getLineOfOffset(caretPosition);
+					column = caretPosition - editor.getLineStartOffset(line);
+				} catch (BadLocationException ex) {
+					ex.printStackTrace();
+				}
+
+				if (tabs.getNumberOfDocuments() != 0) {
+					info.setText(String.format("Ln: %d   Col: %d   Sel: %d", line + 1, column + 1,
+							selectionLength));
+				} else {
+					info.setText("Ln:    Col:    Sel:");
+				}
+			}
+		});
+		
+		this.editor.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				labelLeft.setText(String.format("Length: %d", editor.getText().length()));
 			}
 		});
 
@@ -350,6 +402,24 @@ public class JNotepadPP extends JFrame {
 								Caret c = (Caret) e.getSource();
 								int selectionLength = Math.abs(c.getDot() - c.getMark());
 								enableCaretActions(selectionLength != 0);
+								
+								int line = 1;
+								int column = 1;
+
+								try {
+									int caretPosition = editor.getCaretPosition();
+									line = editor.getLineOfOffset(caretPosition);
+									column = caretPosition - editor.getLineStartOffset(line);
+								} catch (BadLocationException ex) {
+									ex.printStackTrace();
+								}
+
+								if (tabs.getNumberOfDocuments() != 0) {
+									info.setText(String.format("Ln: %d   Col: %d   Sel: %d", line + 1, column + 1,
+											selectionLength));
+								} else {
+									info.setText("Ln: 1    Col: 1    Sel: 0");
+								}
 							}
 						});
 						setSavePath(tabs.getDocument(index).getFilePath());
@@ -364,6 +434,32 @@ public class JNotepadPP extends JFrame {
 				} else {
 					setSaveOptions(false);
 				}
+				
+				if (tabs.getNumberOfDocuments() != 0) {
+					labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+					info.setText(String.format("Ln: %d   Col: %d   Sel: %d", 1, 1, 0));
+				} else {
+					labelLeft.setText("Length: ");
+					info.setText("Ln:    Col:    Sel:");
+				}
+				
+				editor.getDocument().addDocumentListener(new DocumentListener() {
+
+					@Override
+					public void removeUpdate(DocumentEvent e) {
+						labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+					}
+
+					@Override
+					public void insertUpdate(DocumentEvent e) {
+						labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+					}
+
+					@Override
+					public void changedUpdate(DocumentEvent e) {
+						labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+					}
+				});
 			}
 		});
 
@@ -375,6 +471,51 @@ public class JNotepadPP extends JFrame {
 		};
 
 		this.addWindowListener(wl);
+	}
+	
+	private void createStatusBar() {
+		statusBar = new JPanel(new GridLayout(1, 2));
+		labelLeft = new JLabel("Length: 0");
+		info = new JLabel("Ln: 1   Col: 1   Sel: 0");
+
+		dateAndTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		timer = new JLabel();
+		timer.setHorizontalAlignment(SwingConstants.RIGHT);
+
+		labelRight = new JPanel(new GridLayout(1, 2));
+
+		statusBar.add(labelLeft);
+		labelRight.add(info);
+		labelRight.add(timer);
+		statusBar.add(labelRight);
+
+		this.getContentPane().add(statusBar, BorderLayout.PAGE_END);
+
+		getTime();
+	}
+	
+	private void getTime() {
+		updateTime();
+
+		Thread t = new Thread(() -> {
+			while (true) {
+				try {
+					Thread.sleep(500);
+				} catch (Exception ex) {
+				}
+				SwingUtilities.invokeLater(() -> {
+					updateTime();
+				});
+			}
+		});
+		t.setDaemon(true);
+		t.start();
+	}
+	
+	private void updateTime() {
+		time = dateAndTime.format(new Date());
+		timer.setText(time);
+		repaint();
 	}
 
 	public String getCopiedText() {
