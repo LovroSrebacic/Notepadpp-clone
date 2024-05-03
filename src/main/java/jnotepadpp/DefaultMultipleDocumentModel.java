@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -53,8 +54,10 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 
 			@Override
 			public void documentRemoved(SingleDocumentModel model) {
+				notepad.closeWindow(model, currentIndex);
 				tabs.removeTabAt(currentIndex);
 				documents.remove(model);
+				currentDocument = documents.get(tabs.getSelectedIndex());
 			}
 
 			@Override
@@ -63,7 +66,9 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 				tabs.addTab(
 						model.getFilePath().toString().substring(model.getFilePath().toString().lastIndexOf("\\") + 1),
 						greenDiskette, pane, model.getFilePath().toString());
+				notepad.setSaveOptions(false);
 				tabs.setSelectedIndex(documents.size() - 1);
+				currentDocument = model;
 			}
 
 			@Override
@@ -88,6 +93,7 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 				while (iterator.hasNext()) {
 					if (iterator.next().equals(model)) {
 						tabs.setIconAt(counter, redDiskette);
+						notepad.setSaveOptions(true);
 					} else {
 						counter++;
 					}
@@ -117,8 +123,7 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 				currentIndex = source.getSelectedIndex();
 				notepad.setTitle(currentIndex == -1 ? "JNotepad++"
 						: (documents.get(currentIndex).getFilePath().toString().equals("(unnamed)") ? "unnamed"
-								: documents.get(currentIndex).getFilePath().toString())
-								+ " - JNotepad++");
+								: documents.get(currentIndex).getFilePath().toString()) + " - JNotepad++");
 				previousDocument = new DefaultSingleDocumentModel(currentDocument.getTextComponent().getText(),
 						currentDocument.getFilePath());
 				currentDocument = currentIndex == -1 ? null
@@ -220,12 +225,12 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 	}
 
 	@Override
-	public void saveDocument(SingleDocumentModel model, Path newPath) {
+	public void saveDocument(SingleDocumentModel model, Path newPath, boolean closing) {
 		if (model.getFilePath().equals(Paths.get("(unnamed)")) || saveAs) {
 			JFileChooser jfc = new JFileChooser();
-			if(saveAs) {
+			if (saveAs) {
 				jfc.setDialogTitle("Save Document As");
-			}else {
+			} else {
 				jfc.setDialogTitle("Save Document");
 			}
 			if (jfc.showSaveDialog(DefaultMultipleDocumentModel.this) != JFileChooser.APPROVE_OPTION) {
@@ -236,6 +241,8 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 				return;
 			}
 			newPath = jfc.getSelectedFile().toPath();
+			model.setFilePath(newPath);
+			notepad.setSavePath(newPath);
 		}
 
 		if ((Files.exists(newPath) && saveAs) || (Files.exists(newPath) && model.getFirstSave())) {
@@ -245,12 +252,16 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 					"Warning", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 
 			switch (rezultat) {
-			case JOptionPane.CLOSED_OPTION:
+			case JOptionPane.YES_OPTION:{
+				notepad.setSavePath(newPath);
 				return;
-			case 0:
+			}
+			case JOptionPane.CLOSED_OPTION:{
+				notepad.setSavePath(newPath);
+				return;
+			}
+			case JOptionPane.NO_OPTION:
 				break;
-			case 1:
-				return;
 			}
 		}
 
@@ -264,11 +275,13 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 		}
 
 		this.currentDocument.setFilePath(newPath);
+		notepad.setSavePath(newPath);
 
 		notepad.setTitle(model.getFilePath().toString() + " - JNotepad++");
 		this.setTitleAt(currentIndex,
 				model.getFilePath().toString().substring(model.getFilePath().toString().lastIndexOf("\\") + 1));
 		this.setIconAt(currentIndex, greenDiskette);
+		this.notepad.setSaveOptions(false);
 
 		if (model.getFirstSave()) {
 			JOptionPane.showMessageDialog(DefaultMultipleDocumentModel.this, "File Saved", "Information",
@@ -303,6 +316,39 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 	@Override
 	public SingleDocumentModel getDocument(int index) {
 		return this.documents.get(index);
+	}
+
+	public List<SingleDocumentModel> getDocuments() {
+		return this.documents;
+	}
+
+	public void getInfo() {
+
+		if (currentDocument == null) {
+			JOptionPane.showMessageDialog(DefaultMultipleDocumentModel.this, "There is no document opened.",
+					"Information", JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+
+		String text = currentDocument.getTextComponent().getText();
+		int allCharacters = text.length();
+		int nonWhiteCharacters = text.replaceAll("\\s+", "").length();
+		int numberOfRows = 0;
+		for (int i = 0; i < text.length(); i++) {
+			if (text.charAt(i) == '\n') {
+				numberOfRows++;
+			}
+		}
+
+		JOptionPane
+				.showMessageDialog(DefaultMultipleDocumentModel.this,
+						String.format("This document has %d characters, %d non white characters and %d rows.",
+								allCharacters, nonWhiteCharacters, numberOfRows + 1),
+						"Information", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public Collator getCollator() {
+		return this.notepad.getCollator();
 	}
 
 }

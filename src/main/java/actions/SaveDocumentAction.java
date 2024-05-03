@@ -1,6 +1,7 @@
 package main.java.actions;
 
 import java.awt.event.ActionEvent;
+
 import java.nio.file.Path;
 
 import javax.swing.AbstractAction;
@@ -18,14 +19,14 @@ public class SaveDocumentAction extends AbstractAction{
 		this.documents = documents;
 		this.path = path;
 	}
-	
+
 	public void setPath(Path path) {
 		this.path = path;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		documents.saveDocument(documents.getCurrentDocument(), path);
+		documents.saveDocument(documents.getCurrentDocument(), path, false);
 	}
 
 }

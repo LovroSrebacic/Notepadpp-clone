@@ -9,7 +9,7 @@ public interface MultipleDocumentModel extends Iterable<SingleDocumentModel> {
 	SingleDocumentModel createNewDocument();
 	SingleDocumentModel getCurrentDocument();
 	SingleDocumentModel loadDocument(Path path);
-	void saveDocument(SingleDocumentModel model, Path newPath);
+	void saveDocument(SingleDocumentModel model, Path newPath, boolean closing);
 	void closeDocument(SingleDocumentModel model);
 	void addMultipleDocumentListener(MultipleDocumentListener l);
 	void removeMultipleDocumentListener(MultipleDocumentListener l);
