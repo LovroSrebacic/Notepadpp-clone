@@ -5,11 +5,11 @@ import java.text.Collator;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.swing.AbstractAction;
-
 import main.java.jnotepadpp.DefaultMultipleDocumentModel;
+import main.java.local.ILocalizationProvider;
+import main.java.local.LocalizableAction;
 
-public class AscendingSortAction extends AbstractAction{
+public class AscendingSortAction extends LocalizableAction{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -17,7 +17,8 @@ public class AscendingSortAction extends AbstractAction{
 	private DefaultMultipleDocumentModel model;
 	private Collator collator;
 	
-	public AscendingSortAction(DefaultMultipleDocumentModel model) {
+	public AscendingSortAction(DefaultMultipleDocumentModel model, String key, ILocalizationProvider provider) {
+		super(key, provider);
 		this.model = model;
 		this.sorter = new SortImplementation(model.getCurrentDocument());
 	}

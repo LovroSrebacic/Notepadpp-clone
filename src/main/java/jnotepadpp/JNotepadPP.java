@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -44,8 +45,11 @@ import main.java.actions.AscendingSortAction;
 import main.java.actions.CloseDocumentAction;
 import main.java.actions.CopyDocumentAction;
 import main.java.actions.CutDocumentAction;
+import main.java.actions.DeLanguageAction;
 import main.java.actions.DescendingSortAction;
+import main.java.actions.EnLanguageAction;
 import main.java.actions.ExitDocumentAction;
+import main.java.actions.HrLanguageAction;
 import main.java.actions.InfoDocumentAction;
 import main.java.actions.NewDocumentAction;
 import main.java.actions.OpenDocumentAction;
@@ -55,6 +59,14 @@ import main.java.actions.SaveDocumentAction;
 import main.java.actions.ToLowerAction;
 import main.java.actions.ToUpperAction;
 import main.java.actions.ToggleCaseAction;
+import main.java.local.FormLocalizationProvider;
+import main.java.local.ILocalizationListener;
+import main.java.local.ILocalizationProvider;
+import main.java.local.LJButton;
+import main.java.local.LJLabel;
+import main.java.local.LJMenu;
+import main.java.local.LocalizableAction;
+import main.java.local.LocalizationProvider;
 
 public class JNotepadPP extends JFrame {
 
@@ -64,6 +76,9 @@ public class JNotepadPP extends JFrame {
 	private static final int WINDOW_HEIGHT = 700;
 
 	private static final String redDiskette = "./src/main/resources/redDiskette.png";
+	private static final String hrFlag = "./src/main/resources/hr.png";
+	private static final String enFlag = "./src/main/resources/en.png";
+	private static final String deFlag = "./src/main/resources/de.png";
 
 	private DefaultMultipleDocumentModel tabs;
 	private JTextArea editor;
@@ -93,6 +108,10 @@ public class JNotepadPP extends JFrame {
 	private Action infoAction;
 	private Action exitDocumentAction;
 
+	private LocalizableAction hrLanguageAction;
+	private LocalizableAction enLanguageAction;
+	private LocalizableAction deLanguageAction;
+
 	private JButton newDocumentButton;
 	private JButton openDocumentButton;
 	private JButton saveDocumentButton;
@@ -105,6 +124,7 @@ public class JNotepadPP extends JFrame {
 	private JButton cutButton;
 	private JButton infoButton;
 
+	private ILocalizationProvider provider = new FormLocalizationProvider(LocalizationProvider.getProvider(), this);
 	private Collator collator;
 
 	public JNotepadPP() {
@@ -112,7 +132,7 @@ public class JNotepadPP extends JFrame {
 
 		this.getContentPane().setLayout(new BorderLayout());
 		this.textEditor = new JPanel(new BorderLayout());
-		this.tabs = new DefaultMultipleDocumentModel(this);
+		this.tabs = new DefaultMultipleDocumentModel(this, provider);
 		this.editor = this.tabs.getCurrentDocument().getTextComponent();
 		this.copiedText = "";
 
@@ -141,112 +161,88 @@ public class JNotepadPP extends JFrame {
 	}
 
 	private void createActions() {
-		newDocumentAction = new NewDocumentAction(tabs);
-		newDocumentAction.putValue(Action.NAME, "New");
-		newDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Used to create new file.");
+		newDocumentAction = new NewDocumentAction(tabs, "new", provider);
 		newDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control N"));
 		newDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
 
-		openDocumentAction = new OpenDocumentAction(tabs, JNotepadPP.this);
-		openDocumentAction.putValue(Action.NAME, "Open");
-		openDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Used to open existing file.");
+		openDocumentAction = new OpenDocumentAction(tabs, JNotepadPP.this, "open", provider);
 		openDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control O"));
 		openDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
 
 		saveDocumentAction = new SaveDocumentAction(tabs,
-				tabs.getNumberOfDocuments() == 0 ? Paths.get("") : tabs.getCurrentDocument().getFilePath());
-		saveDocumentAction.putValue(Action.NAME, "Save");
-		saveDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Used to save existing file.");
+				tabs.getNumberOfDocuments() == 0 ? Paths.get("") : tabs.getCurrentDocument().getFilePath(), "save",
+				provider);
 		saveDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
 		saveDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
 		saveDocumentAction.setEnabled(false);
 
 		saveAsDocumentAction = new SaveAsDocumentAction(tabs,
-				tabs.getNumberOfDocuments() == 0 ? Paths.get("") : tabs.getCurrentDocument().getFilePath());
-		saveAsDocumentAction.putValue(Action.NAME, "Save As");
-		saveAsDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Used to save existing file in any format.");
+				tabs.getNumberOfDocuments() == 0 ? Paths.get("") : tabs.getCurrentDocument().getFilePath(), "saveAs",
+				provider);
 		saveAsDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control alt S"));
 		saveAsDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
 		saveAsDocumentAction.setEnabled(false);
 
-		closeDocumentAction = new CloseDocumentAction(tabs);
-		closeDocumentAction.putValue(Action.NAME, "Close [W]");
-		closeDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Used to close current document.");
+		closeDocumentAction = new CloseDocumentAction(tabs, "close", provider);
 		closeDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control W"));
 		closeDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_W);
 
-		toggleCaseAction = new ToggleCaseAction(editor);
-		toggleCaseAction.putValue(Action.NAME, "ToggleCase");
-		toggleCaseAction.putValue(Action.SHORT_DESCRIPTION, "Used to toggle selected text.");
+		toggleCaseAction = new ToggleCaseAction(editor, "toggle", provider);
 		toggleCaseAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control T"));
 		toggleCaseAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_T);
 		toggleCaseAction.setEnabled(false);
 
-		toUpperCaseAction = new ToUpperAction(editor);
-		toUpperCaseAction.putValue(Action.NAME, "ToUpper");
-		toUpperCaseAction.putValue(Action.SHORT_DESCRIPTION, "Used to change selected text to upper case.");
+		toUpperCaseAction = new ToUpperAction(editor, "toUpper", provider);
 		toUpperCaseAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control U"));
 		toUpperCaseAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_U);
 		toUpperCaseAction.setEnabled(false);
 
-		toLowerCaseAction = new ToLowerAction(editor);
-		toLowerCaseAction.putValue(Action.NAME, "ToLower");
-		toLowerCaseAction.putValue(Action.SHORT_DESCRIPTION, "Used to change selected text to lower case.");
+		toLowerCaseAction = new ToLowerAction(editor, "toLower", provider);
 		toLowerCaseAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control L"));
 		toLowerCaseAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_L);
 		toLowerCaseAction.setEnabled(false);
 
-		copyAction = new CopyDocumentAction(editor, this);
-		copyAction.putValue(Action.NAME, "Copy");
-		copyAction.putValue(Action.SHORT_DESCRIPTION, "Used to copy selected text.");
+		copyAction = new CopyDocumentAction(editor, this, "copy", provider);
 		copyAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control C"));
 		copyAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
 		copyAction.setEnabled(false);
 
-		pasteAction = new PasteDocumentAction(editor, this);
-		pasteAction.putValue(Action.NAME, "Paste [V]");
-		pasteAction.putValue(Action.SHORT_DESCRIPTION, "Used to paste text into document.");
+		pasteAction = new PasteDocumentAction(editor, this, "paste", provider);
 		pasteAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control shift V"));
 		pasteAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_V);
 		pasteAction.setEnabled(false);
 
-		cutAction = new CutDocumentAction(editor, this);
-		cutAction.putValue(Action.NAME, "Cut [X]");
-		cutAction.putValue(Action.SHORT_DESCRIPTION, "Used to cut selected text.");
+		cutAction = new CutDocumentAction(editor, this, "cut", provider);
 		cutAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control X"));
 		cutAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
 		cutAction.setEnabled(false);
 
-		ascendingSortAction = new AscendingSortAction(tabs);
-		ascendingSortAction.putValue(Action.NAME, "Ascending");
-		ascendingSortAction.putValue(Action.SHORT_DESCRIPTION, "Sort selected lines in ascending order.");
+		ascendingSortAction = new AscendingSortAction(tabs, "asc", provider);
 		ascendingSortAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control shift A"));
 		ascendingSortAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
 		ascendingSortAction.setEnabled(false);
 
-		descendingSortAction = new DescendingSortAction(tabs);
-		descendingSortAction.putValue(Action.NAME, "Descending");
-		descendingSortAction.putValue(Action.SHORT_DESCRIPTION, "Sort selected lines in descending order.");
+		descendingSortAction = new DescendingSortAction(tabs, "dsc", provider);
 		descendingSortAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control shift D"));
 		descendingSortAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
 		descendingSortAction.setEnabled(false);
 
-		infoAction = new InfoDocumentAction(tabs);
-		infoAction.putValue(Action.NAME, "Info");
-		infoAction.putValue(Action.SHORT_DESCRIPTION, "Get info about opened document.");
+		infoAction = new InfoDocumentAction(tabs, "info", provider);
 		infoAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control I"));
 		infoAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
 
-		exitDocumentAction = new ExitDocumentAction(this, tabs);
-		exitDocumentAction.putValue(Action.NAME, "Exit");
-		exitDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Exit application.");
+		exitDocumentAction = new ExitDocumentAction(this, tabs, "exit", provider);
 		exitDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control E"));
 		exitDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_E);
+
+		hrLanguageAction = new HrLanguageAction("hr", provider);
+		enLanguageAction = new EnLanguageAction("en", provider);
+		deLanguageAction = new DeLanguageAction("de", provider);
 	}
 
 	private void createMenu() {
 		JMenuBar menuBar = new JMenuBar();
-		JMenu fileMenu = new JMenu("File");
+		JMenu fileMenu = new LJMenu("file", provider);
 		menuBar.add(fileMenu);
 
 		fileMenu.add(new JMenuItem(newDocumentAction));
@@ -257,9 +253,9 @@ public class JNotepadPP extends JFrame {
 		fileMenu.addSeparator();
 		fileMenu.add(new JMenuItem(exitDocumentAction));
 
-		JMenu toolMenu = new JMenu("Tools");
-		JMenu changeCase = new JMenu("Change case");
-		JMenu textMenu = new JMenu("Text Menu");
+		JMenu toolMenu = new LJMenu("tools", provider);
+		JMenu changeCase = new LJMenu("changeCase", provider);
+		JMenu textMenu = new LJMenu("textMenu", provider);
 
 		changeCase.add(new JMenuItem(toggleCaseAction));
 		changeCase.add(new JMenuItem(toUpperCaseAction));
@@ -273,18 +269,31 @@ public class JNotepadPP extends JFrame {
 
 		menuBar.add(toolMenu);
 
-		JMenu infoMenu = new JMenu("Info");
+		JMenu infoMenu = new LJMenu("info", provider);
 		infoMenu.add(new JMenuItem(infoAction));
 
 		menuBar.add(infoMenu);
 
-		JMenu sortMenu = new JMenu("Sort");
+		JMenu sortMenu = new LJMenu("sort", provider);
 		JMenuItem ascending = new JMenuItem(ascendingSortAction);
 		JMenuItem descending = new JMenuItem(descendingSortAction);
 		sortMenu.add(ascending);
 		sortMenu.add(descending);
 
 		menuBar.add(sortMenu);
+		
+		JMenu languageMenu = new LJMenu("languages", provider);
+		JMenuItem hrAction = new JMenuItem(hrLanguageAction);
+		JMenuItem enAction = new JMenuItem(enLanguageAction);
+		JMenuItem deAction = new JMenuItem(deLanguageAction);
+		hrAction.setIcon(new ImageIcon(hrFlag));
+		enAction.setIcon(new ImageIcon(enFlag));
+		deAction.setIcon(new ImageIcon(deFlag));
+		languageMenu.add(hrAction);
+		languageMenu.add(enAction);
+		languageMenu.add(deAction);
+		
+		menuBar.add(languageMenu);
 
 		this.setJMenuBar(menuBar);
 	}
@@ -314,31 +323,28 @@ public class JNotepadPP extends JFrame {
 	}
 
 	private void createButtons() {
-		newDocumentButton = new JButton(newDocumentAction);
-		newDocumentButton.setText("New");
-		openDocumentButton = new JButton(openDocumentAction);
-		openDocumentButton.setText("Open");
-		saveDocumentButton = new JButton(saveDocumentAction);
-		saveDocumentButton.setText("Save");
-		saveAsDocumentButton = new JButton(saveAsDocumentAction);
-		saveAsDocumentButton.setText("Save As");
-		toggleCaseButton = new JButton(toggleCaseAction);
-		toggleCaseButton.setText("ToggleCase");
-		toUpperButton = new JButton(toUpperCaseAction);
-		toUpperButton.setText("ToUpper");
-		toLowerButton = new JButton(toLowerCaseAction);
-		toLowerButton.setText("ToLower");
-		copyButton = new JButton(copyAction);
-		copyButton.setText("Copy");
-		pasteButton = new JButton(pasteAction);
-		pasteButton.setText("Paste");
-		cutButton = new JButton(cutAction);
-		cutButton.setText("Cut");
-		infoButton = new JButton(infoAction);
-		infoButton.setText("Info");
+		newDocumentButton = new LJButton(newDocumentAction, "new", provider);
+		openDocumentButton = new LJButton(openDocumentAction, "open", provider);
+		saveDocumentButton = new LJButton(saveDocumentAction, "save", provider);
+		saveAsDocumentButton = new LJButton(saveAsDocumentAction, "saveAs", provider);
+		toggleCaseButton = new LJButton(toggleCaseAction, "toggle", provider);
+		toUpperButton = new LJButton(toUpperCaseAction, "toUpper", provider);
+		toLowerButton = new LJButton(toLowerCaseAction, "toLower", provider);
+		copyButton = new LJButton(copyAction, "copy", provider);
+		pasteButton = new LJButton(pasteAction, "paste", provider);
+		cutButton = new LJButton(cutAction, "cut", provider);
+		infoButton = new LJButton(infoAction, "info", provider);
 	}
 
 	private void addListeners() {
+
+		this.collator = Collator.getInstance(new Locale("en"));
+		provider.addLocalizationListener(new ILocalizationListener() {
+			@Override
+			public void localizationChanged() {
+				collator = provider.getCollator();
+			}
+		});
 
 		this.editor.getCaret().addChangeListener(new ChangeListener() {
 			@Override
@@ -346,7 +352,7 @@ public class JNotepadPP extends JFrame {
 				Caret c = (Caret) e.getSource();
 				int selectionLength = Math.abs(c.getDot() - c.getMark());
 				enableCaretActions(selectionLength != 0);
-				
+
 				int line = 1;
 				int column = 1;
 
@@ -359,29 +365,28 @@ public class JNotepadPP extends JFrame {
 				}
 
 				if (tabs.getNumberOfDocuments() != 0) {
-					info.setText(String.format("Ln: %d   Col: %d   Sel: %d", line + 1, column + 1,
-							selectionLength));
+					info.setText(String.format(provider.getString("infoLine"), line + 1, column + 1, selectionLength));
 				} else {
-					info.setText("Ln:    Col:    Sel:");
+					info.setText(provider.getString("infoLineEmpty"));
 				}
 			}
 		});
-		
+
 		this.editor.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+				labelLeft.setText(String.format(provider.getString("length"), editor.getText().length()));
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+				labelLeft.setText(String.format(provider.getString("length"), editor.getText().length()));
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+				labelLeft.setText(String.format(provider.getString("length"), editor.getText().length()));
 			}
 		});
 
@@ -402,7 +407,7 @@ public class JNotepadPP extends JFrame {
 								Caret c = (Caret) e.getSource();
 								int selectionLength = Math.abs(c.getDot() - c.getMark());
 								enableCaretActions(selectionLength != 0);
-								
+
 								int line = 1;
 								int column = 1;
 
@@ -415,10 +420,10 @@ public class JNotepadPP extends JFrame {
 								}
 
 								if (tabs.getNumberOfDocuments() != 0) {
-									info.setText(String.format("Ln: %d   Col: %d   Sel: %d", line + 1, column + 1,
+									info.setText(String.format(provider.getString("infoLine"), line + 1, column + 1,
 											selectionLength));
 								} else {
-									info.setText("Ln: 1    Col: 1    Sel: 0");
+									info.setText(provider.getString("infoLineEmpty"));
 								}
 							}
 						});
@@ -434,30 +439,30 @@ public class JNotepadPP extends JFrame {
 				} else {
 					setSaveOptions(false);
 				}
-				
+
 				if (tabs.getNumberOfDocuments() != 0) {
-					labelLeft.setText(String.format("Length: %d", editor.getText().length()));
-					info.setText(String.format("Ln: %d   Col: %d   Sel: %d", 1, 1, 0));
+					labelLeft.setText(String.format(provider.getString("length"), editor.getText().length()));
+					info.setText(String.format(provider.getString("infoLine"), 1, 1, 0));
 				} else {
-					labelLeft.setText("Length: ");
-					info.setText("Ln:    Col:    Sel:");
+					labelLeft.setText(provider.getString("lengthEmpty"));
+					info.setText(provider.getString("infoLineEmpty"));
 				}
-				
+
 				editor.getDocument().addDocumentListener(new DocumentListener() {
 
 					@Override
 					public void removeUpdate(DocumentEvent e) {
-						labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+						labelLeft.setText(String.format(provider.getString("length"), editor.getText().length()));
 					}
 
 					@Override
 					public void insertUpdate(DocumentEvent e) {
-						labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+						labelLeft.setText(String.format(provider.getString("length"), editor.getText().length()));
 					}
 
 					@Override
 					public void changedUpdate(DocumentEvent e) {
-						labelLeft.setText(String.format("Length: %d", editor.getText().length()));
+						labelLeft.setText(String.format(provider.getString("length"), editor.getText().length()));
 					}
 				});
 			}
@@ -472,11 +477,11 @@ public class JNotepadPP extends JFrame {
 
 		this.addWindowListener(wl);
 	}
-	
+
 	private void createStatusBar() {
 		statusBar = new JPanel(new GridLayout(1, 2));
-		labelLeft = new JLabel("Length: 0");
-		info = new JLabel("Ln: 1   Col: 1   Sel: 0");
+		labelLeft = new LJLabel("lengthEmpty", provider);
+		info = new LJLabel("infoLineEmpty", provider);
 
 		dateAndTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		timer = new JLabel();
@@ -493,7 +498,7 @@ public class JNotepadPP extends JFrame {
 
 		getTime();
 	}
-	
+
 	private void getTime() {
 		updateTime();
 
@@ -511,7 +516,7 @@ public class JNotepadPP extends JFrame {
 		t.setDaemon(true);
 		t.start();
 	}
-	
+
 	private void updateTime() {
 		time = dateAndTime.format(new Date());
 		timer.setText(time);
@@ -537,11 +542,11 @@ public class JNotepadPP extends JFrame {
 			saveAsDocumentAction.setEnabled(enabled);
 		}
 	}
-	
+
 	public void setSavePath(Path path) {
 		((SaveDocumentAction) this.saveDocumentAction).setPath(path);
 	}
-	
+
 	public void closeWindow(SingleDocumentModel model, int index) {
 		if (!isItSaved(index)) {
 			model.setFirstSave(true);
@@ -567,10 +572,10 @@ public class JNotepadPP extends JFrame {
 			System.exit(1);
 		}
 
-		String[] options = new String[] { "Yes", "No", "Cancel" };
+		String[] options = new String[] { provider.getString("yes"), provider.getString("no"), provider.getString("cancel") };
 
-		int result = JOptionPane.showOptionDialog(JNotepadPP.this, "There is unsaved data. Do you want to save it?",
-				"Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+		int result = JOptionPane.showOptionDialog(JNotepadPP.this, provider.getString("unsavedData"),
+				provider.getString("warning"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 
 		switch (result) {
 		case JOptionPane.YES_OPTION: {
@@ -606,20 +611,19 @@ public class JNotepadPP extends JFrame {
 
 		}
 	}
-	
+
 	private boolean isItSaved(int index) {
 		return !tabs.getIconAt(index).toString().substring(tabs.getIconAt(index).toString().lastIndexOf("\\") + 1)
 				.equals(redDiskette.substring(redDiskette.lastIndexOf("/") + 1));
 	}
-	
-	private int askForSave(SingleDocumentModel model) {
-		String[] askForSave = new String[] { "Yes", "No" };
 
-		return JOptionPane.showOptionDialog(JNotepadPP.this,
-				"Save file " + model.getFilePath().toString() + "?", "Warning",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, askForSave, askForSave[0]);
+	private int askForSave(SingleDocumentModel model) {
+		String[] askForSave = new String[] { provider.getString("yes"), provider.getString("no") };
+
+		return JOptionPane.showOptionDialog(JNotepadPP.this, provider.getString("saveDocument") + model.getFilePath().toString() + "?",
+				provider.getString("warning"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, askForSave, askForSave[0]);
 	}
-	
+
 	private void enableCaretActions(boolean enabled) {
 		toggleCaseAction.setEnabled(enabled);
 		toUpperCaseAction.setEnabled(enabled);

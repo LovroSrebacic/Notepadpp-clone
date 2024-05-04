@@ -6,22 +6,23 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import main.java.jnotepadpp.DefaultMultipleDocumentModel;
 import main.java.jnotepadpp.JNotepadPP;
+import main.java.local.ILocalizationProvider;
+import main.java.local.LocalizableAction;
 
-public class OpenDocumentAction extends AbstractAction{
+public class OpenDocumentAction extends LocalizableAction{
 	
 	private static final long serialVersionUID = 1L;
 	
 	private DefaultMultipleDocumentModel documents;
 	private JNotepadPP notepad;
 	
-	public OpenDocumentAction(DefaultMultipleDocumentModel documents, JNotepadPP notepad) {
-		this.documents = documents;
+	public OpenDocumentAction(DefaultMultipleDocumentModel documents, JNotepadPP notepad, String key, ILocalizationProvider provider) {
+		super(key, provider);
 		this.notepad = notepad;
 	}
 

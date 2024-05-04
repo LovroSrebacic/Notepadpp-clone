@@ -2,20 +2,22 @@ package main.java.actions;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
 import javax.swing.JTextArea;
 import javax.swing.text.Caret;
 
 import main.java.jnotepadpp.JNotepadPP;
+import main.java.local.ILocalizationProvider;
+import main.java.local.LocalizableAction;
 
-public class CutDocumentAction extends AbstractAction{
+public class CutDocumentAction extends LocalizableAction{
 
 	private static final long serialVersionUID = 1L;
 
 	private JTextArea textArea;
 	private JNotepadPP notepad;
 	
-	public CutDocumentAction(JTextArea textArea, JNotepadPP notepad) {
+	public CutDocumentAction(JTextArea textArea, JNotepadPP notepad, String key, ILocalizationProvider provider) {
+		super(key, provider);
 		this.textArea = textArea;
 		this.notepad = notepad;
 	}

@@ -4,18 +4,19 @@ import java.awt.event.ActionEvent;
 
 import java.nio.file.Path;
 
-import javax.swing.AbstractAction;
-
 import main.java.jnotepadpp.DefaultMultipleDocumentModel;
+import main.java.local.ILocalizationProvider;
+import main.java.local.LocalizableAction;
 
-public class SaveDocumentAction extends AbstractAction{
+public class SaveDocumentAction extends LocalizableAction{
 
 	private static final long serialVersionUID = 1L;
 	
 	private DefaultMultipleDocumentModel documents;
 	private Path path;
 
-	public SaveDocumentAction(DefaultMultipleDocumentModel documents, Path path) {
+	public SaveDocumentAction(DefaultMultipleDocumentModel documents, Path path, String key, ILocalizationProvider provider) {
+		super(key, provider);
 		this.documents = documents;
 		this.path = path;
 	}

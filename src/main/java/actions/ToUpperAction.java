@@ -2,18 +2,21 @@ package main.java.actions;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
-public class ToUpperAction extends AbstractAction{
+import main.java.local.ILocalizationProvider;
+import main.java.local.LocalizableAction;
+
+public class ToUpperAction extends LocalizableAction{
 
 	private static final long serialVersionUID = 1L;
 	
 	private JTextArea textArea;
 
-	public ToUpperAction(JTextArea textArea) {
+	public ToUpperAction(JTextArea textArea, String key, ILocalizationProvider provider) {
+		super(key, provider);
 		this.textArea = textArea;
 	}
 
