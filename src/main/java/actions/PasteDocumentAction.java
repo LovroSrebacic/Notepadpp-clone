@@ -3,6 +3,7 @@ package main.java.actions;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.text.Caret;
 
 import main.java.jnotepadpp.JNotepadPP;
@@ -16,8 +17,8 @@ public class PasteDocumentAction extends LocalizableAction{
 	private JTextArea textArea;
 	private JNotepadPP notepad;
 	
-	public PasteDocumentAction(JTextArea textArea, JNotepadPP notepad, String key, ILocalizationProvider provider) {
-		super(key, provider);
+	public PasteDocumentAction(JTextArea textArea, JNotepadPP notepad, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
+		super(key, provider, keyStroke, mnemonicKey, enabled);
 		this.textArea = textArea;
 		this.notepad = notepad;
 	}

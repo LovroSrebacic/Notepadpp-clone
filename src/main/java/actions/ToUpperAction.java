@@ -3,6 +3,7 @@ package main.java.actions;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
@@ -15,8 +16,8 @@ public class ToUpperAction extends LocalizableAction{
 	
 	private JTextArea textArea;
 
-	public ToUpperAction(JTextArea textArea, String key, ILocalizationProvider provider) {
-		super(key, provider);
+	public ToUpperAction(JTextArea textArea, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
+		super(key, provider, keyStroke, mnemonicKey, enabled);
 		this.textArea = textArea;
 	}
 

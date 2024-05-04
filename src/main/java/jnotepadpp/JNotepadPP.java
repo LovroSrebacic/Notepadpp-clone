@@ -161,83 +161,56 @@ public class JNotepadPP extends JFrame {
 	}
 
 	private void createActions() {
-		newDocumentAction = new NewDocumentAction(tabs, "new", provider);
-		newDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control N"));
-		newDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
-
-		openDocumentAction = new OpenDocumentAction(tabs, JNotepadPP.this, "open", provider);
-		openDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control O"));
-		openDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
+		newDocumentAction = new NewDocumentAction(tabs, "new", provider, KeyStroke.getKeyStroke("control N"),
+				KeyEvent.VK_N, true);
+		
+		openDocumentAction = new OpenDocumentAction(tabs, JNotepadPP.this, "open", provider,
+				KeyStroke.getKeyStroke("control O"), KeyEvent.VK_O, true);
 
 		saveDocumentAction = new SaveDocumentAction(tabs,
 				tabs.getNumberOfDocuments() == 0 ? Paths.get("") : tabs.getCurrentDocument().getFilePath(), "save",
-				provider);
-		saveDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
-		saveDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
-		saveDocumentAction.setEnabled(false);
+				provider, KeyStroke.getKeyStroke("control S"), KeyEvent.VK_S, false);
 
 		saveAsDocumentAction = new SaveAsDocumentAction(tabs,
 				tabs.getNumberOfDocuments() == 0 ? Paths.get("") : tabs.getCurrentDocument().getFilePath(), "saveAs",
-				provider);
-		saveAsDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control alt S"));
-		saveAsDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
-		saveAsDocumentAction.setEnabled(false);
+				provider, KeyStroke.getKeyStroke("control alt S"), KeyEvent.VK_S, false);
 
-		closeDocumentAction = new CloseDocumentAction(tabs, "close", provider);
-		closeDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control W"));
-		closeDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_W);
+		closeDocumentAction = new CloseDocumentAction(tabs, "close", provider, KeyStroke.getKeyStroke("control W"),
+				KeyEvent.VK_W, true);
 
-		toggleCaseAction = new ToggleCaseAction(editor, "toggle", provider);
-		toggleCaseAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control T"));
-		toggleCaseAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_T);
-		toggleCaseAction.setEnabled(false);
+		toggleCaseAction = new ToggleCaseAction(editor, "toggle", provider, KeyStroke.getKeyStroke("control T"),
+				KeyEvent.VK_T, false);
 
-		toUpperCaseAction = new ToUpperAction(editor, "toUpper", provider);
-		toUpperCaseAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control U"));
-		toUpperCaseAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_U);
-		toUpperCaseAction.setEnabled(false);
+		toUpperCaseAction = new ToUpperAction(editor, "toUpper", provider, KeyStroke.getKeyStroke("control U"),
+				KeyEvent.VK_U, false);
 
-		toLowerCaseAction = new ToLowerAction(editor, "toLower", provider);
-		toLowerCaseAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control L"));
-		toLowerCaseAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_L);
-		toLowerCaseAction.setEnabled(false);
+		toLowerCaseAction = new ToLowerAction(editor, "toLower", provider, KeyStroke.getKeyStroke("control L"),
+				KeyEvent.VK_L, false);
 
-		copyAction = new CopyDocumentAction(editor, this, "copy", provider);
-		copyAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control C"));
-		copyAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
-		copyAction.setEnabled(false);
+		copyAction = new CopyDocumentAction(editor, this, "copy", provider, KeyStroke.getKeyStroke("control C"),
+				KeyEvent.VK_C, false);
 
-		pasteAction = new PasteDocumentAction(editor, this, "paste", provider);
-		pasteAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control shift V"));
-		pasteAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_V);
-		pasteAction.setEnabled(false);
+		pasteAction = new PasteDocumentAction(editor, this, "paste", provider,
+				KeyStroke.getKeyStroke("control shift V"), KeyEvent.VK_V, false);
 
-		cutAction = new CutDocumentAction(editor, this, "cut", provider);
-		cutAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control X"));
-		cutAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
-		cutAction.setEnabled(false);
+		cutAction = new CutDocumentAction(editor, this, "cut", provider, KeyStroke.getKeyStroke("control X"),
+				KeyEvent.VK_X, false);
 
-		ascendingSortAction = new AscendingSortAction(tabs, "asc", provider);
-		ascendingSortAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control shift A"));
-		ascendingSortAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
-		ascendingSortAction.setEnabled(false);
+		ascendingSortAction = new AscendingSortAction(tabs, "asc", provider, KeyStroke.getKeyStroke("control shift A"),
+				KeyEvent.VK_A, false);
 
-		descendingSortAction = new DescendingSortAction(tabs, "dsc", provider);
-		descendingSortAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control shift D"));
-		descendingSortAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
-		descendingSortAction.setEnabled(false);
+		descendingSortAction = new DescendingSortAction(tabs, "dsc", provider,
+				KeyStroke.getKeyStroke("control shift D"), KeyEvent.VK_D, false);
 
-		infoAction = new InfoDocumentAction(tabs, "info", provider);
-		infoAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control I"));
-		infoAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
+		infoAction = new InfoDocumentAction(tabs, "info", provider, KeyStroke.getKeyStroke("control I"), KeyEvent.VK_I,
+				true);
 
-		exitDocumentAction = new ExitDocumentAction(this, tabs, "exit", provider);
-		exitDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control E"));
-		exitDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_E);
+		exitDocumentAction = new ExitDocumentAction(this, tabs, "exit", provider, KeyStroke.getKeyStroke("control E"),
+				KeyEvent.VK_E, true);
 
-		hrLanguageAction = new HrLanguageAction("hr", provider);
-		enLanguageAction = new EnLanguageAction("en", provider);
-		deLanguageAction = new DeLanguageAction("de", provider);
+		hrLanguageAction = new HrLanguageAction("hr", provider, null, 0, true);
+		enLanguageAction = new EnLanguageAction("en", provider, null, 0, true);
+		deLanguageAction = new DeLanguageAction("de", provider, null, 0, true);
 	}
 
 	private void createMenu() {
@@ -281,7 +254,7 @@ public class JNotepadPP extends JFrame {
 		sortMenu.add(descending);
 
 		menuBar.add(sortMenu);
-		
+
 		JMenu languageMenu = new LJMenu("languages", provider);
 		JMenuItem hrAction = new JMenuItem(hrLanguageAction);
 		JMenuItem enAction = new JMenuItem(enLanguageAction);
@@ -292,7 +265,7 @@ public class JNotepadPP extends JFrame {
 		languageMenu.add(hrAction);
 		languageMenu.add(enAction);
 		languageMenu.add(deAction);
-		
+
 		menuBar.add(languageMenu);
 
 		this.setJMenuBar(menuBar);
@@ -572,10 +545,12 @@ public class JNotepadPP extends JFrame {
 			System.exit(1);
 		}
 
-		String[] options = new String[] { provider.getString("yes"), provider.getString("no"), provider.getString("cancel") };
+		String[] options = new String[] { provider.getString("yes"), provider.getString("no"),
+				provider.getString("cancel") };
 
 		int result = JOptionPane.showOptionDialog(JNotepadPP.this, provider.getString("unsavedData"),
-				provider.getString("warning"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+				provider.getString("warning"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
+				options, options[0]);
 
 		switch (result) {
 		case JOptionPane.YES_OPTION: {
@@ -620,8 +595,10 @@ public class JNotepadPP extends JFrame {
 	private int askForSave(SingleDocumentModel model) {
 		String[] askForSave = new String[] { provider.getString("yes"), provider.getString("no") };
 
-		return JOptionPane.showOptionDialog(JNotepadPP.this, provider.getString("saveDocument") + model.getFilePath().toString() + "?",
-				provider.getString("warning"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, askForSave, askForSave[0]);
+		return JOptionPane.showOptionDialog(JNotepadPP.this,
+				provider.getString("saveDocument") + model.getFilePath().toString() + "?",
+				provider.getString("warning"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				askForSave, askForSave[0]);
 	}
 
 	private void enableCaretActions(boolean enabled) {

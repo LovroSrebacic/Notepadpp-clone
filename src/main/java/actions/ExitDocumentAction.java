@@ -2,6 +2,8 @@ package main.java.actions;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.KeyStroke;
+
 import main.java.jnotepadpp.DefaultMultipleDocumentModel;
 import main.java.jnotepadpp.JNotepadPP;
 import main.java.local.ILocalizationProvider;
@@ -14,8 +16,8 @@ public class ExitDocumentAction extends LocalizableAction{
 	private JNotepadPP notepad;
 	private DefaultMultipleDocumentModel model;
 
-	public ExitDocumentAction(JNotepadPP notepad, DefaultMultipleDocumentModel model, String key, ILocalizationProvider provider) {
-		super(key, provider);
+	public ExitDocumentAction(JNotepadPP notepad, DefaultMultipleDocumentModel model, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
+		super(key, provider, keyStroke, mnemonicKey, enabled);
 		this.notepad = notepad;
 		this.model = model;
 	}

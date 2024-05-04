@@ -8,6 +8,7 @@ import java.nio.file.Path;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 import main.java.jnotepadpp.DefaultMultipleDocumentModel;
 import main.java.jnotepadpp.JNotepadPP;
@@ -21,8 +22,8 @@ public class OpenDocumentAction extends LocalizableAction{
 	private DefaultMultipleDocumentModel documents;
 	private JNotepadPP notepad;
 	
-	public OpenDocumentAction(DefaultMultipleDocumentModel documents, JNotepadPP notepad, String key, ILocalizationProvider provider) {
-		super(key, provider);
+	public OpenDocumentAction(DefaultMultipleDocumentModel documents, JNotepadPP notepad, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
+		super(key, provider, keyStroke, mnemonicKey, enabled);
 		this.notepad = notepad;
 	}
 

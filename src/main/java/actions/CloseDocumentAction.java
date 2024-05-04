@@ -2,6 +2,8 @@ package main.java.actions;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.KeyStroke;
+
 import main.java.jnotepadpp.DefaultMultipleDocumentModel;
 import main.java.local.ILocalizationProvider;
 import main.java.local.LocalizableAction;
@@ -12,8 +14,8 @@ private static final long serialVersionUID = 1L;
 	
 	private DefaultMultipleDocumentModel documents;
 	
-	public CloseDocumentAction(DefaultMultipleDocumentModel documents, String key, ILocalizationProvider provider) {
-		super(key, provider);
+	public CloseDocumentAction(DefaultMultipleDocumentModel documents, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
+		super(key, provider, keyStroke, mnemonicKey, enabled);
 		this.documents = documents;
 	}
 

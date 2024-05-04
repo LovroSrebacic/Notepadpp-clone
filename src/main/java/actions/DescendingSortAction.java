@@ -5,6 +5,8 @@ import java.text.Collator;
 import java.util.List;
 import java.util.function.Function;
 
+import javax.swing.KeyStroke;
+
 import main.java.jnotepadpp.DefaultMultipleDocumentModel;
 import main.java.local.ILocalizationProvider;
 import main.java.local.LocalizableAction;
@@ -17,8 +19,8 @@ public class DescendingSortAction extends LocalizableAction{
 	private DefaultMultipleDocumentModel model;
 	private Collator collator;
 	
-	public DescendingSortAction(DefaultMultipleDocumentModel model, String key, ILocalizationProvider provider) {
-		super(key, provider);
+	public DescendingSortAction(DefaultMultipleDocumentModel model, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
+		super(key, provider, keyStroke, mnemonicKey, enabled);
 		this.model = model;
 		this.sorter = new SortImplementation(model.getCurrentDocument());
 	}
