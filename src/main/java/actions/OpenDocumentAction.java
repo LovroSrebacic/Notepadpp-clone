@@ -24,6 +24,7 @@ public class OpenDocumentAction extends LocalizableAction{
 	
 	public OpenDocumentAction(DefaultMultipleDocumentModel documents, JNotepadPP notepad, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
 		super(key, provider, keyStroke, mnemonicKey, enabled);
+		this.documents = documents;
 		this.notepad = notepad;
 	}
 
@@ -31,7 +32,7 @@ public class OpenDocumentAction extends LocalizableAction{
 	public void actionPerformed(ActionEvent e) {
 		
 		JFileChooser fc = new JFileChooser();
-		fc.setDialogTitle("Open file");
+		fc.setDialogTitle(getProvider().getString("openFile"));
 		if(fc.showOpenDialog(notepad) != JFileChooser.APPROVE_OPTION){
 			return;
 		}
@@ -42,8 +43,8 @@ public class OpenDocumentAction extends LocalizableAction{
 		if(!Files.isReadable(path)) {
 			JOptionPane.showMessageDialog(
 					notepad, 
-					"Datoteka " + fileName.getAbsolutePath() + " ne postoji!",
-					"Pogreška",
+					getProvider().getString("file") + " " + fileName.getAbsolutePath() + " " + getProvider().getString("doesNotExist"),
+					getProvider().getString("error"),
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
