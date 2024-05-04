@@ -42,7 +42,7 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 	private DocumentListener jTextAreaListener;
 	private JNotepadPP notepad;
 	private boolean saveAs;
-	
+
 	private ILocalizationProvider provider;
 
 	public DefaultMultipleDocumentModel(JNotepadPP notepad, ILocalizationProvider provider) {
@@ -206,8 +206,8 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 			octet = Files.readAllBytes(path);
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(notepad,
-					provider.getString("errorFileReadMsg") + " " + path.toFile().getAbsolutePath() + ".", provider.getString("error"),
-					JOptionPane.ERROR_MESSAGE);
+					provider.getString("errorFileReadMsg") + " " + path.toFile().getAbsolutePath() + ".",
+					provider.getString("error"), JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
 
@@ -238,8 +238,8 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 				jfc.setDialogTitle(provider.getString("saveDocument"));
 			}
 			if (jfc.showSaveDialog(DefaultMultipleDocumentModel.this) != JFileChooser.APPROVE_OPTION) {
-				JOptionPane.showMessageDialog(DefaultMultipleDocumentModel.this, provider.getString("nothingSaved"), provider.getString("warning"),
-						JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(DefaultMultipleDocumentModel.this, provider.getString("nothingSaved"),
+						provider.getString("warning"), JOptionPane.WARNING_MESSAGE);
 				saveAs = false;
 				model.setFirstSave(true);
 				return;
@@ -253,19 +253,16 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 			String[] options = new String[] { provider.getString("yes"), provider.getString("no") };
 
 			int rezultat = JOptionPane.showOptionDialog(notepad, provider.getString("fileAlreadyExists"),
-					provider.getString("warning"), JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+					provider.getString("warning"), JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+					options, options[0]);
 
 			switch (rezultat) {
-			case JOptionPane.YES_OPTION:{
-				notepad.setSavePath(newPath);
+			case JOptionPane.CLOSED_OPTION:
 				return;
-			}
-			case JOptionPane.CLOSED_OPTION:{
-				notepad.setSavePath(newPath);
-				return;
-			}
 			case JOptionPane.NO_OPTION:
 				break;
+			case JOptionPane.YES_OPTION:
+				notepad.setSavePath(newPath);
 			}
 		}
 
@@ -274,7 +271,8 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 			Files.write(newPath, data);
 		} catch (IOException ex) {
 			JOptionPane.showMessageDialog(DefaultMultipleDocumentModel.this,
-					provider.getString("errorFileWriteMsg") + " " + newPath, provider.getString("error"), JOptionPane.ERROR_MESSAGE);
+					provider.getString("errorFileWriteMsg") + " " + newPath, provider.getString("error"),
+					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
@@ -288,8 +286,8 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 		this.notepad.setSaveOptions(false);
 
 		if (model.getFirstSave()) {
-			JOptionPane.showMessageDialog(DefaultMultipleDocumentModel.this, provider.getString("infoSaved"), provider.getString("information"),
-					JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(DefaultMultipleDocumentModel.this, provider.getString("infoSaved"),
+					provider.getString("information"), JOptionPane.INFORMATION_MESSAGE);
 		}
 		saveAs = false;
 		model.setFirstSave(false);
@@ -344,11 +342,9 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 			}
 		}
 
-		JOptionPane
-				.showMessageDialog(DefaultMultipleDocumentModel.this,
-						String.format(provider.getString("infoMsg"),
-								allCharacters, nonWhiteCharacters, numberOfRows + 1),
-						provider.getString("information"), JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(DefaultMultipleDocumentModel.this,
+				String.format(provider.getString("infoMsg"), allCharacters, nonWhiteCharacters, numberOfRows + 1),
+				provider.getString("information"), JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public Collator getCollator() {
