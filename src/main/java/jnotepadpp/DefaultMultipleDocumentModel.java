@@ -59,9 +59,20 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 			@Override
 			public void documentRemoved(SingleDocumentModel model) {
 				notepad.closeWindow(model, currentIndex);
-				tabs.removeTabAt(currentIndex);
+				if (tabs.getTabCount() == 1) {
+					createNewDocument();
+					tabs.removeTabAt(0);
+				} else {
+					tabs.removeTabAt(currentIndex);
+				}
 				documents.remove(model);
-				currentDocument = documents.get(tabs.getSelectedIndex());
+				notepad.setTitle(currentIndex == -1 ? "JNotepad++"
+						: (documents.get(currentIndex).getFilePath().toString().equals("(unnamed)") ? "unnamed"
+								: documents.get(currentIndex).getFilePath().toString()) + " - JNotepad++");
+				previousDocument = new DefaultSingleDocumentModel(currentDocument.getTextComponent().getText(),
+						currentDocument.getFilePath());
+				currentDocument = currentIndex == -1 ? null
+						: (DefaultSingleDocumentModel) documents.get(tabs.getSelectedIndex());
 			}
 
 			@Override
