@@ -1,6 +1,7 @@
 package main.java.jnotepadpp;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,9 +29,9 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 
 	private static final long serialVersionUID = 1L;
 	private static final ImageIcon greenDiskette = new ImageIcon(
-			System.getProperty("user.dir") + "/main/resources/greenDiskette.png");
+			System.getProperty("user.dir") + "\\main\\resources\\greenDiskette.png");
 	private static final ImageIcon redDiskette = new ImageIcon(
-			System.getProperty("user.dir") + "/main/resources/redDiskette.png");
+			System.getProperty("user.dir") + "\\main\\resources\\redDiskette.png");
 
 	private List<SingleDocumentModel> documents;
 	private SingleDocumentModel currentDocument;

@@ -75,10 +75,10 @@ public class JNotepadPP extends JFrame {
 	private static final int WINDOW_WIDTH = 1000;
 	private static final int WINDOW_HEIGHT = 700;
 
-	private static final String redDiskette = System.getProperty("user.dir") + "/main/resources/redDiskette.png";
-	private static final String hrFlag = System.getProperty("user.dir") + "/main/resources/hr.png";
-	private static final String enFlag = System.getProperty("user.dir") + "/main/resources/en.png";
-	private static final String deFlag = System.getProperty("user.dir") + "/main/resources/de.png";
+	private static final String redDiskette = "redDiskette.png";
+	private static final String hrFlag = System.getProperty("user.dir") + "\\main\\resources\\hr.png";
+	private static final String enFlag = System.getProperty("user.dir") + "\\main\\resources\\en.png";
+	private static final String deFlag = System.getProperty("user.dir") + "\\main\\resources\\de.png";
 
 	private DefaultMultipleDocumentModel tabs;
 	private JTextArea editor;
@@ -407,7 +407,7 @@ public class JNotepadPP extends JFrame {
 					iterator.next();
 				}
 
-				if (!isItSaved(tabs.getSelectedIndex())) {
+				if (!isSaved(tabs.getSelectedIndex())) {
 					setSaveOptions(true);
 				} else {
 					setSaveOptions(false);
@@ -521,7 +521,7 @@ public class JNotepadPP extends JFrame {
 	}
 
 	public void closeWindow(SingleDocumentModel model, int index) {
-		if (!isItSaved(index)) {
+		if (!isSaved(index)) {
 			model.setFirstSave(true);
 
 			int resultOfAsk = askForSave(model);
@@ -535,7 +535,7 @@ public class JNotepadPP extends JFrame {
 	public void closingApplication(int numberOfDocuments, boolean exitAction) {
 		boolean unsavedData = false;
 		for (int i = 0; i < tabs.getNumberOfDocuments(); i++) {
-			if (!isItSaved(i)) {
+			if (!isSaved(i)) {
 				unsavedData = true;
 				break;
 			}
@@ -557,7 +557,7 @@ public class JNotepadPP extends JFrame {
 			List<SingleDocumentModel> allModels = tabs.getDocuments();
 			for (int i = 0; i < allModels.size(); i++) {
 				tabs.setSelectedIndex(i);
-				if (!isItSaved(i)) {
+				if (!isSaved(i)) {
 					allModels.get(i).setFirstSave(true);
 					int resultOfAsk = askForSave(allModels.get(i));
 
@@ -587,9 +587,10 @@ public class JNotepadPP extends JFrame {
 		}
 	}
 
-	private boolean isItSaved(int index) {
-		return !tabs.getIconAt(index).toString().substring(tabs.getIconAt(index).toString().lastIndexOf("\\") + 1)
-				.equals(redDiskette.substring(redDiskette.lastIndexOf("/") + 1));
+	private boolean isSaved(int index) {
+		String tab = tabs.getIconAt(index).toString();
+		int nameIndex = tab.lastIndexOf("\\") + 1;
+		return !tab.substring(nameIndex).equals(redDiskette);
 	}
 
 	private int askForSave(SingleDocumentModel model) {
