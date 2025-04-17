@@ -75,10 +75,10 @@ public class JNotepadPP extends JFrame {
 	private static final int WINDOW_WIDTH = 1000;
 	private static final int WINDOW_HEIGHT = 700;
 
-	private static final String redDiskette = "./src/main/resources/redDiskette.png";
-	private static final String hrFlag = "./src/main/resources/hr.png";
-	private static final String enFlag = "./src/main/resources/en.png";
-	private static final String deFlag = "./src/main/resources/de.png";
+	private static final String redDiskette = System.getProperty("user.dir") + "/main/resources/redDiskette.png";
+	private static final String hrFlag = System.getProperty("user.dir") + "/main/resources/hr.png";
+	private static final String enFlag = System.getProperty("user.dir") + "/main/resources/en.png";
+	private static final String deFlag = System.getProperty("user.dir") + "/main/resources/de.png";
 
 	private DefaultMultipleDocumentModel tabs;
 	private JTextArea editor;

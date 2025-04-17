@@ -25,3 +25,10 @@ replay_pid*
 
 # Manifest file
 Manifest.txt
+
+#.idea and out folders
+**/.idea/
+**/out/
+
+#iml file
+*.iml
