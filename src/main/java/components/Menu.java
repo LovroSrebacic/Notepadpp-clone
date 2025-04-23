@@ -67,9 +67,9 @@ public class Menu extends JMenuBar {
         JMenuItem hrAction = new JMenuItem(languageActions.getHrLanguageAction());
         JMenuItem enAction = new JMenuItem(languageActions.getEnLanguageAction());
         JMenuItem deAction = new JMenuItem(languageActions.getDeLanguageAction());
-        hrAction.setIcon(new ImageIcon(Constants.HR_FLAG_PATH));
-        enAction.setIcon(new ImageIcon(Constants.EN_FLAG_PATH));
-        deAction.setIcon(new ImageIcon(Constants.DE_FLAG_PATH));
+        hrAction.setIcon(new ImageIcon(Constants.getHrFlagResource()));
+        enAction.setIcon(new ImageIcon(Constants.getEnFlagResource()));
+        deAction.setIcon(new ImageIcon(Constants.getDeFlagResource()));
         languageMenu.add(hrAction);
         languageMenu.add(enAction);
         languageMenu.add(deAction);

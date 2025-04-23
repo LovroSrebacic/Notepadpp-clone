@@ -50,12 +50,12 @@ public class JNotepadPP extends JFrame {
 	private final ILocalizationProvider provider = new FormLocalizationProvider(LocalizationProvider.getProvider(), this);
 	private Collator collator;
 
-	public JNotepadPP() {
+    public JNotepadPP() {
 		initGUI();
 
-		this.getContentPane().setLayout(new BorderLayout());
+        this.getContentPane().setLayout(new BorderLayout());
 		this.textEditor = new JPanel(new BorderLayout());
-		this.tabs = new DefaultMultipleDocumentModel(this, provider);
+        this.tabs = new DefaultMultipleDocumentModel(this, provider);
 		this.editor = this.tabs.getCurrentDocument().getTextComponent();
 		this.copiedText = "";
 

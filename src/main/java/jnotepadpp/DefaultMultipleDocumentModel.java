@@ -72,9 +72,9 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 			@Override
 			public void documentAdded(SingleDocumentModel model) {
 				JScrollPane pane = new JScrollPane(model.getTextComponent());
-				tabs.addTab(
+                tabs.addTab(
 						model.getFilePath().toString().substring(model.getFilePath().toString().lastIndexOf("\\") + 1),
-						new ImageIcon(Constants.GREEN_DISKETTE_PATH), pane, model.getFilePath().toString());
+						new ImageIcon(Constants.getGreenDisketteResource()), pane, model.getFilePath().toString());
 				notepad.setSaveOptions(false);
 				tabs.setSelectedIndex(documents.size() - 1);
 				currentDocument = model;
@@ -100,7 +100,7 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 				int counter = 0;
                 for (SingleDocumentModel singleDocumentModel : DefaultMultipleDocumentModel.this) {
                     if (singleDocumentModel.equals(model)) {
-                        tabs.setIconAt(counter, new ImageIcon(Constants.RED_DISKETTE_PATH));
+                        tabs.setIconAt(counter, new ImageIcon(Constants.getRedDisketteResource()));
                         notepad.setSaveOptions(true);
                         currentDocument.setModified(true);
                     } else {
@@ -276,7 +276,7 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 		notepad.setTitle(model.getFilePath().toString() + " - JNotepad++");
 		this.setTitleAt(currentIndex,
 				model.getFilePath().toString().substring(model.getFilePath().toString().lastIndexOf("\\") + 1));
-		this.setIconAt(currentIndex, new ImageIcon(Constants.GREEN_DISKETTE_PATH));
+		this.setIconAt(currentIndex, new ImageIcon(Constants.getGreenDisketteResource()));
 		this.notepad.setSaveOptions(false);
 
 		if (model.getFirstSave()) {
