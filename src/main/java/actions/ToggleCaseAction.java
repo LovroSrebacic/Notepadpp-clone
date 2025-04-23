@@ -11,8 +11,6 @@ import main.java.local.ILocalizationProvider;
 import main.java.local.LocalizableAction;
 
 public class ToggleCaseAction extends LocalizableAction{
-
-	private static final long serialVersionUID = 1L;
 	
 	private JTextArea textArea;
 
@@ -36,21 +34,21 @@ public class ToggleCaseAction extends LocalizableAction{
 			doc.remove(offset, length);
 			doc.insertString(offset, text, null);
 		} catch(BadLocationException ex) {
-			ex.printStackTrace();
+			System.err.println("BadLocationException: " + ex.getMessage());
 		}
 	}
 	
 	private String changeCase(String text) {
-		char[] znakovi = text.toCharArray();
-		for(int i = 0; i < znakovi.length; i++) {
-			char c = znakovi[i];
+		char[] chars = text.toCharArray();
+		for(int i = 0; i < chars.length; i++) {
+			char c = chars[i];
 			if(Character.isLowerCase(c)) {
-				znakovi[i] = Character.toUpperCase(c);
+				chars[i] = Character.toUpperCase(c);
 			} else if(Character.isUpperCase(c)) {
-				znakovi[i] = Character.toLowerCase(c);
+				chars[i] = Character.toLowerCase(c);
 			}
 		}
-			return new String(znakovi);
+			return new String(chars);
 	}
 	
 	public void setTextArea(JTextArea textArea) {

@@ -1,7 +1,6 @@
 package main.java.actions;
 
 import java.awt.event.ActionEvent;
-
 import java.nio.file.Path;
 
 import javax.swing.KeyStroke;
@@ -12,9 +11,7 @@ import main.java.local.LocalizableAction;
 
 public class SaveDocumentAction extends LocalizableAction{
 
-	private static final long serialVersionUID = 1L;
-	
-	private DefaultMultipleDocumentModel documents;
+	private final DefaultMultipleDocumentModel documents;
 	private Path path;
 
 	public SaveDocumentAction(DefaultMultipleDocumentModel documents, Path path, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {

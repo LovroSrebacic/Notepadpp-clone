@@ -9,10 +9,11 @@ import javax.swing.JTextArea;
 import main.java.listener.SingleDocumentListener;
 
 public class DefaultSingleDocumentModel implements SingleDocumentModel{
-	private JTextArea textArea;
+
+	private final JTextArea textArea;
 	private Path path;
 	private boolean modified;
-	private List<SingleDocumentListener> listeners;
+	private final List<SingleDocumentListener> listeners;
 	private boolean firstSave;
 	
 	public DefaultSingleDocumentModel(String text, Path path) {
@@ -51,11 +52,6 @@ public class DefaultSingleDocumentModel implements SingleDocumentModel{
 	@Override
 	public void addSingleDocumentListener(SingleDocumentListener l) {
 		this.listeners.add(l);
-	}
-
-	@Override
-	public void removeSingleDocumentListener(SingleDocumentListener l) {
-		this.listeners.remove(l);
 	}
 	
 	public List<SingleDocumentListener> getListeners() {

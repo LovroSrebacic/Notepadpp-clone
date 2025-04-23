@@ -11,8 +11,6 @@ import main.java.local.ILocalizationProvider;
 import main.java.local.LocalizableAction;
 
 public class ToLowerAction extends LocalizableAction{
-
-	private static final long serialVersionUID = 1L;
 	
 	private JTextArea textArea;
 
@@ -36,7 +34,7 @@ public class ToLowerAction extends LocalizableAction{
 			doc.remove(offset, length);
 			doc.insertString(offset, text, null);
 		} catch(BadLocationException ex) {
-			ex.printStackTrace();
+			System.err.println("BadLocationException: " + ex.getMessage());
 		}
 	}
 	

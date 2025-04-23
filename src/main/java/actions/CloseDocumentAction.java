@@ -9,10 +9,8 @@ import main.java.local.ILocalizationProvider;
 import main.java.local.LocalizableAction;
 
 public class CloseDocumentAction extends LocalizableAction{
-
-private static final long serialVersionUID = 1L;
 	
-	private DefaultMultipleDocumentModel documents;
+	private final DefaultMultipleDocumentModel documents;
 	
 	public CloseDocumentAction(DefaultMultipleDocumentModel documents, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
 		super(key, provider, keyStroke, mnemonicKey, enabled);

@@ -12,10 +12,8 @@ import main.java.local.LocalizableAction;
 
 public class CopyDocumentAction extends LocalizableAction{
 
-	private static final long serialVersionUID = 1L;
-
 	private JTextArea textArea;
-	private JNotepadPP notepad;
+	private final JNotepadPP notepad;
 	
 	public CopyDocumentAction(JTextArea textArea, JNotepadPP notepad, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
 		super(key, provider, keyStroke, mnemonicKey, enabled);

@@ -10,11 +10,9 @@ import main.java.local.ILocalizationProvider;
 import main.java.local.LocalizableAction;
 
 public class ExitDocumentAction extends LocalizableAction{
-
-	private static final long serialVersionUID = 1L;
 	
-	private JNotepadPP notepad;
-	private DefaultMultipleDocumentModel model;
+	private final JNotepadPP notepad;
+	private final DefaultMultipleDocumentModel model;
 
 	public ExitDocumentAction(JNotepadPP notepad, DefaultMultipleDocumentModel model, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
 		super(key, provider, keyStroke, mnemonicKey, enabled);

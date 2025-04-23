@@ -10,8 +10,6 @@ import main.java.local.LocalizationProvider;
 
 public class DeLanguageAction extends LocalizableAction{
 
-	private static final long serialVersionUID = 1L;
-
 	public DeLanguageAction(String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
 		super(key, provider, keyStroke, mnemonicKey, enabled);
 	}

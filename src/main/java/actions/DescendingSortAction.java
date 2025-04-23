@@ -2,8 +2,6 @@ package main.java.actions;
 
 import java.awt.event.ActionEvent;
 import java.text.Collator;
-import java.util.List;
-import java.util.function.Function;
 
 import javax.swing.KeyStroke;
 
@@ -12,11 +10,9 @@ import main.java.local.ILocalizationProvider;
 import main.java.local.LocalizableAction;
 
 public class DescendingSortAction extends LocalizableAction{
-
-	private static final long serialVersionUID = 1L;
 	
-	private SortImplementation sorter;
-	private DefaultMultipleDocumentModel model;
+	private final SortImplementation sorter;
+	private final DefaultMultipleDocumentModel model;
 	private Collator collator;
 	
 	public DescendingSortAction(DefaultMultipleDocumentModel model, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
@@ -30,14 +26,10 @@ public class DescendingSortAction extends LocalizableAction{
 		this.sorter.setCurrentDocument(this.model.getCurrentDocument());
 		this.collator = this.model.getCollator();
 		
-		this.sorter.sort(new Function<List<String>, List<String>>() {
-			
-			@Override
-			public List<String> apply(List<String> t) {
-				t.sort((x, y) -> -collator.compare(x, y));
-				return t;
-			}
-		});
+		this.sorter.sort(t -> {
+            t.sort((x, y) -> -collator.compare(x, y));
+            return t;
+        });
 		
 	}
 }

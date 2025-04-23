@@ -13,7 +13,6 @@ public interface SingleDocumentModel {
 	boolean isModified();
 	void setModified(boolean modified);
 	void addSingleDocumentListener(SingleDocumentListener l);
-	void removeSingleDocumentListener(SingleDocumentListener l);
 	boolean getFirstSave();
 	void setFirstSave(boolean firstSave);
 }

@@ -6,18 +6,13 @@ public class LocalizationProviderBridge extends AbstractLocalizationProvider{
 
 	private boolean connected;
 	
-	private ILocalizationProvider provider;
+	private final ILocalizationProvider provider;
 	
-	private ILocalizationListener listener;
+	private final ILocalizationListener listener;
 	
 	public LocalizationProviderBridge(ILocalizationProvider provider) {
 		this.provider = provider;
-		this.listener = new ILocalizationListener() {
-			@Override
-			public void localizationChanged() {
-				fire();
-			}
-		};
+		this.listener = this::fire;
 	}
 	
 	public void connect() {

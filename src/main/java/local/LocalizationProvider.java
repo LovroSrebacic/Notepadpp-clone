@@ -9,10 +9,8 @@ public class LocalizationProvider extends AbstractLocalizationProvider{
 	private String language;
 	private ResourceBundle bundle;
 	private Collator collator;
-	
-	private final String LANGUAGES = "main.java.local.lang.language";
 
-	private static final LocalizationProvider provider = new LocalizationProvider();
+    private static final LocalizationProvider provider = new LocalizationProvider();
 
 	private LocalizationProvider() {
 		setLanguage("en");
@@ -28,7 +26,8 @@ public class LocalizationProvider extends AbstractLocalizationProvider{
 		this.language = language;
 		Locale locale = Locale.forLanguageTag(language);
 		collator = Collator.getInstance(locale);
-		bundle = ResourceBundle.getBundle(LANGUAGES + "_" + this.language, locale);
+        String LANGUAGES = "main.java.local.lang.language";
+        bundle = ResourceBundle.getBundle(LANGUAGES + "_" + this.language, locale);
 		fire();
 	}
 

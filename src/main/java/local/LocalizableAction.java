@@ -4,10 +4,8 @@ import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 
 public abstract class LocalizableAction extends AbstractAction{
-
-	private static final long serialVersionUID = 1L;
 	
-	private ILocalizationProvider provider;
+	private final ILocalizationProvider provider;
 	
 	public LocalizableAction(String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
 		this.provider = provider;
@@ -17,13 +15,10 @@ public abstract class LocalizableAction extends AbstractAction{
 		putValue(MNEMONIC_KEY, mnemonicKey);
 		setEnabled(enabled);
 		
-		provider.addLocalizationListener(new ILocalizationListener() {
-			@Override
-			public void localizationChanged() {
-				putValue(NAME, provider.getString(key));
-				putValue(SHORT_DESCRIPTION, provider.getString(key + "_desc"));
-			}
-		});
+		provider.addLocalizationListener(() -> {
+            putValue(NAME, provider.getString(key));
+            putValue(SHORT_DESCRIPTION, provider.getString(key + "_desc"));
+        });
 	}
 	
 	public ILocalizationProvider getProvider() {

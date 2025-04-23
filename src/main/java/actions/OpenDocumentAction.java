@@ -17,10 +17,8 @@ import main.java.local.LocalizableAction;
 
 public class OpenDocumentAction extends LocalizableAction{
 	
-	private static final long serialVersionUID = 1L;
-	
-	private DefaultMultipleDocumentModel documents;
-	private JNotepadPP notepad;
+	private final DefaultMultipleDocumentModel documents;
+	private final JNotepadPP notepad;
 	
 	public OpenDocumentAction(DefaultMultipleDocumentModel documents, JNotepadPP notepad, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
 		super(key, provider, keyStroke, mnemonicKey, enabled);

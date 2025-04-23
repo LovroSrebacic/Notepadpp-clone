@@ -1,6 +1,7 @@
 package main.java.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -37,21 +38,19 @@ public class SortImplementation {
 			String text = document.getText(offset, endset - offset);
 			String[] lines = text.split("\\r?\\n");
 			List<String> order = new ArrayList<>();
-			for (String s : lines) {
-				order.add(s);
-			}
+            Collections.addAll(order, lines);
 
 			order = f.apply(order);
 			document.remove(offset, endset - offset);
 			StringBuilder sb = new StringBuilder();
 			for (String s : order) {
-				sb.append(s + "\n");
+				sb.append(s).append("\n");
 			}
 
 			document.insertString(offset, sb.toString(), null);
 
 		} catch (BadLocationException e) {
-			e.printStackTrace();
+			System.err.println("BadLocationException: " + e.getMessage());
 		}
 
 	}

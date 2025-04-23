@@ -10,9 +10,7 @@ import main.java.local.LocalizableAction;
 
 public class InfoDocumentAction extends LocalizableAction{
 
-	private static final long serialVersionUID = 1L;
-
-	private DefaultMultipleDocumentModel documents;
+	private final DefaultMultipleDocumentModel documents;
 	
 	public InfoDocumentAction(DefaultMultipleDocumentModel documents, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
 		super(key, provider, keyStroke, mnemonicKey, enabled);

@@ -12,10 +12,8 @@ import main.java.local.LocalizableAction;
 
 public class PasteDocumentAction extends LocalizableAction{
 
-	private static final long serialVersionUID = 1L;
-
-	private JTextArea textArea;
-	private JNotepadPP notepad;
+	private final JTextArea textArea;
+	private final JNotepadPP notepad;
 	
 	public PasteDocumentAction(JTextArea textArea, JNotepadPP notepad, String key, ILocalizationProvider provider, KeyStroke keyStroke, int mnemonicKey, boolean enabled) {
 		super(key, provider, keyStroke, mnemonicKey, enabled);
@@ -44,9 +42,5 @@ public class PasteDocumentAction extends LocalizableAction{
 		}
 		
 		textArea.setText(newString);
-	}
-	
-	public void setTextArea(JTextArea textArea) {
-		this.textArea = textArea;
 	}
 }
